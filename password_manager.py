@@ -1,9 +1,11 @@
-import sys
+import sys, os
 from cryptography.fernet import Fernet
-import os
+from random_password_generator import generate_password
 
 
-# Views all username and passwords in the file
+
+
+# VIEW ALL ACCOUNTS AND PASSWORDS
 def view():
     data = list()
     with open(path, 'r') as f:
@@ -21,19 +23,22 @@ def view():
     print("------------------------------------")
 
 
-
-# Create new file if the file storing our passwords doesn't exist and add the password into it
-def add():
-    name = input("Account Name: ")
-    pwd = input("Password: ")
+# ADD NEW ACCOUNT AND PASSWORD
+def add(pwd_length=None):
+    if pwd_length == None:
+        name = input("Account Name: ")
+        pwd = input("Password: ")
+    else:
+        name = input("Account Name: ")
+        pwd = generate_password(pwd_length)
+        print("Random password generated.\n")
 
     with open(path, 'a') as f:
         # Encrypts the password before storing it
         f.write(name + '|' + fer.encrypt(pwd.encode()).decode() + "\n")
 
 
-
-# Generate random key and store in key file
+# GENERATE RANDOM KEY
 def write_key(path):
     key = Fernet.generate_key() # create random key
 
@@ -44,12 +49,8 @@ def write_key(path):
     print("Random key generated\n")
 
 
-# Load key file and store value in key variable
+# LOAD KEY
 def load_key(path):
-    # file = open(path, 'rb')
-    # key = file.read()
-    # file.close()
-
     with open(path, 'rb') as file:
         key = file.read()
 
@@ -83,14 +84,21 @@ if __name__ == '__main__':
 
 
     while True:
-        mode = int(input("View existing passwords [1]\n""Add a new password [2]\n""Close program [3]\n""Input: "))
-        if mode == 3:
+        mode = int(input("View existing passwords [1]\n"
+        "Add a new password [2]\n"
+        "Add a new random password [3]\n"
+        "Close program [4]\n"
+        "Input: "))
+        if mode == 4:
             break
 
         if mode == 1:
             view()
         elif mode == 2:
             add()
+        elif mode == 3:
+            pwd_length = int(input("Password Length (characters): "))
+            add(pwd_length)
         else:
             print("Invalid Mode")
             continue
