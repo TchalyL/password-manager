@@ -19,6 +19,9 @@ pip install cryptography
 python password_manager.py
 ```
 
-...
+## Current Features
+- View existing passwords
+- Create a new user defined password
+- Create a new random password
 
 
